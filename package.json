@@ -1,0 +1,17 @@
+{
+  "name": "gasbot",
+  "version": "1.0.0",
+  "description": "Discord Bot to track changing ETH gas prices",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot.js"
+  },
+  "author": "Cheaterkin & Sentiment",
+  "license": "ISC",
+  "dependencies": {
+    "discord": "^13.5.1",
+    "node": "^17.3.0",
+    "node-fetch": "^3.1.0"
+  }
+}
