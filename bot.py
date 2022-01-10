@@ -90,17 +90,21 @@ async def getBasePrice():
     gasUsedRatio = res["result"]["gasUsedRatio"]
 
 cached_users = {}
+previous_message = 0
 
 @tasks.loop(seconds=3)
 async def notifyUsers():
+    global previous_message
     with open("subscribed-users.json", 'r') as db:
         jsonifiedDb = json.load(db)
         for user in jsonifiedDb["user_table"]:
             if user["started"] and global_info_basefee <= user["low"]:
                 if user["id"] not in cached_users:
                     fetchedUser = await bot.fetch_user(user["id"])
-                    cached_users[user["id"]] = fetchedUser  
-                await cached_users[user["id"]].send('Base Price: {0}, Block Number: {1}'.format(global_info_basefee, global_info_blocknumber))
+                    cached_users[user["id"]] = fetchedUser
+                if previous_message != 0:
+                    await previous_message.edit(content=previous_message.content.replace("*",""))
+                previous_message = await cached_users[user["id"]].send('**----------------------\nBase Price: {price:.2f}**'.format(price=float(global_info_basefee)))
         db.close()
     
 bot.run(TOKEN)
